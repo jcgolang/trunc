@@ -39,12 +39,14 @@ func main() {
 		os.Exit(1)
 	}
 
+	bytes := (int64)(size * 1024.0 * 1024.0)
+
 	if fi, err := os.Stat(fileName); err != nil || fi.IsDir() {
 		fmt.Printf(TextColor, WARNING, "File not found or is a directory.\n")
 		os.Exit(1)
+	} else {
+		bytes = min(bytes, fi.Size())
 	}
-
-	bytes := (int64)(size * 1024.0 * 1024.0)
 
 	if err := os.Truncate(fileName, bytes); err != nil {
 		fmt.Printf(TextColor, 196, "Error truncating file: "+err.Error()+"\n")
@@ -55,4 +57,11 @@ func main() {
 
 	os.Exit(0)
 
+}
+
+func min(a, b int64) int64 {
+	if a < b {
+		return a
+	}
+	return b
 }
